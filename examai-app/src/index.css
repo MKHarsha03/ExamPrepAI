@@ -1,0 +1,20 @@
+.navigation{
+  padding:25px;
+  border: 1px solid black;
+  text-align:center;
+}
+.navigation-elements{
+  padding:25px;
+  font-size: 15px;
+  font-weight: bold;
+  color: black;
+  text-decoration:none;
+  border:1px solid black;
+}
+.navigation-elements:hover{
+  background-color:lightgray;
+}
+.navigation-elements:active{
+  background-color:green;
+  color:white;
+}
