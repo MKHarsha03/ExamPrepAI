@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 
 void main() => runApp(const ExamAI());
 
@@ -19,7 +20,21 @@ class ExamAIApp extends StatefulWidget {
 class _ExamAIApp extends State<ExamAIApp> {
   bool shadowColor = false;
   double? scrolledUnderElevation;
+  late TextEditingController _controller;
+  final TextEditingController _apiController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   // void _openDrawer() {
   //   _scaffoldKey.currentState!.openDrawer();
@@ -40,16 +55,50 @@ class _ExamAIApp extends State<ExamAIApp> {
       ),
       drawer: Drawer(
         child: SafeArea(
-          child: Center(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const Text('This is the Drawer'),
-                  ElevatedButton(
-                    onPressed: _closeDrawer,
-                    child: const Text('Close Drawer'),
-                  )
-                ]),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text("Groq API Key"),
+                Divider(color: Colors.grey),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 12.0),
+                  child: TextField(
+                    controller: _apiController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: "Groq API Key",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                Text("Add TextBook:"),
+                Divider(color: Colors.grey),
+              ]),
+        ),
+      ),
+      bottomSheet: BottomAppBar(
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                flex: 4,
+                child: TextField(
+                  controller: _controller,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: null,
+                  onSubmitted: null,
+                ),
+              ),
+              Expanded(
+                child: IconButton(
+                  icon: Icon(Icons.send),
+                  onPressed: null,
+                ),
+              ),
+            ],
           ),
         ),
       ),
