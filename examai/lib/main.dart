@@ -48,27 +48,6 @@ class _ExamAIApp extends State<ExamAIApp> {
   //   Navigator.of(context).pop();
   // }
 
-  Future<void> _selectFiles() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
-    );
-    if (result != null) {
-      File pdfFile = File(result.files.single.path!);
-      final uri = Uri.parse("http://127.0.0.1:5000/upload");
-      final request = http.MultipartRequest('POST', uri)
-        ..files.add(await http.MultipartFile.fromPath('pdf', pdfFile.path));
-      final response = await request.send();
-      if (response.statusCode == 200) {
-        log('PDF uploaded successfully');
-      } else {
-        log('Failed to upload pdf');
-      }
-    } else {
-      log("No file selected!");
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,7 +80,7 @@ class _ExamAIApp extends State<ExamAIApp> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 12.0),
                   child: ElevatedButton(
-                    onPressed: _selectFiles,
+                    onPressed: null,
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
