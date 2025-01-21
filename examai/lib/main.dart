@@ -1,5 +1,10 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+// import 'package:http/http.dart';
+// import 'dart:convert';
 
 void main() => runApp(const ExamAI());
 
@@ -44,6 +49,17 @@ class _ExamAIApp extends State<ExamAIApp> {
     Navigator.of(context).pop();
   }
 
+  Future<void> _selectFiles() async {
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(allowMultiple: true);
+    if (result != null) {
+      List<File> files = result.paths.map((path) => File(path!)).toList();
+      log("$files");
+    } else {
+      log("No files have been uploaded");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,6 +89,23 @@ class _ExamAIApp extends State<ExamAIApp> {
                 ),
                 Text("Add TextBook:"),
                 Divider(color: Colors.grey),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 12.0),
+                  child: ElevatedButton(
+                    onPressed: _selectFiles,
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text("Upload"),
+                          Icon(Icons.upload),
+                        ]),
+                  ),
+                ),
               ]),
         ),
       ),
