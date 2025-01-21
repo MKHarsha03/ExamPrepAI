@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-// import 'package:http/http.dart';
-// import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 void main() => runApp(const ExamAI());
 
@@ -45,18 +45,28 @@ class _ExamAIApp extends State<ExamAIApp> {
   //   _scaffoldKey.currentState!.openDrawer();
   // }
 
-  void _closeDrawer() {
-    Navigator.of(context).pop();
-  }
+  // void _closeDrawer() {
+  //   Navigator.of(context).pop();
+  // }
 
   Future<void> _selectFiles() async {
-    FilePickerResult? result =
-        await FilePicker.platform.pickFiles(allowMultiple: true);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
     if (result != null) {
-      List<File> files = result.paths.map((path) => File(path!)).toList();
-      log("$files");
+      File pdfFile = File(result.files.single.path!);
+      final uri = Uri.parse("http://127.0.0.1:5000/upload");
+      final request = http.MultipartRequest('POST', uri)
+        ..files.add(await http.MultipartFile.fromPath('pdf', pdfFile.path));
+      final response = await request.send();
+      if (response.statusCode == 200) {
+        log('PDF uploaded successfully');
+      } else {
+        log('Failed to upload pdf');
+      }
     } else {
-      log("No files have been uploaded");
+      log("No file selected!");
     }
   }
 
