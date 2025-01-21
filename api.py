@@ -7,12 +7,12 @@ def apiKey():
     key=request.form.get('key')
 
     if key:
-        return jsonify({'message':'Key received successfully!'})
+        return jsonify({'message':'Key received successfully!'}), 200
     else:
         return jsonify({'message':'No key provided'}), 400
     
 
 if __name__=='__main__':
-    app.run(debug=True,port=49486)
+    app.run(debug=True)
     
 
