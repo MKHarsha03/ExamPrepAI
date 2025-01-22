@@ -51,7 +51,7 @@ class _ExamAIApp extends State<ExamAIApp> {
 
   void _sendAPI() async {
     try {
-      final response = await http.post(Uri.parse("http://127.0.0.1:5000/"),
+      final response = await http.post(Uri.parse("http://192.168.1.4:8000/"),
           body: {'key': _apiController.text});
       if (response.statusCode == 200) {
         log("Key sent successfully!");
