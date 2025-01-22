@@ -37,8 +37,10 @@ class _ExamAIApp extends State<ExamAIApp> {
       _statusMessage = 'Sending...';
     });
     try {
-      final response = await http
-          .post(Uri.parse("http://192.168.1.4:8000/"), body: {'key': value});
+      final response = await http.post(
+        Uri.parse("http://192.168.1.4:8000/"),
+        body: {'key': value},
+      );
       if (response.statusCode == 200) {
         setState(() {
           _statusMessage = "Key sent successfully!";
@@ -52,6 +54,23 @@ class _ExamAIApp extends State<ExamAIApp> {
       setState(() {
         _statusMessage = 'Error! Cannot connect to the server';
       });
+    }
+  }
+
+  void _sendQuery(String? value) async {
+    try {
+      final response = await http.post(
+        Uri.parse("http://192.168.1.4:8000/send_prompt"),
+        body: {'query': value},
+      );
+
+      if (response.statusCode == 200) {
+        log("We won bro");
+      } else {
+        log("We lost bro");
+      }
+    } catch (e) {
+      log("We are done! $e");
     }
   }
 
@@ -119,12 +138,11 @@ class _ExamAIApp extends State<ExamAIApp> {
               Expanded(
                 flex: 4,
                 child: TextField(
+                  onSubmitted: _sendQuery,
                   controller: _controller,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                   ),
-                  maxLines: null,
-                  onSubmitted: null,
                 ),
               ),
               Expanded(
