@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 // import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 void main() => runApp(const ExamAI());
 
@@ -48,19 +49,17 @@ class _ExamAIApp extends State<ExamAIApp> {
   //   Navigator.of(context).pop();
   // }
 
-  Future<void> _sendAPI() async {
+  void _sendAPI() async {
     try {
-      final response = await http.post(
-        Uri.parse("http://127.0.0.1:5000/sendKey"),
-        body: {'key': _apiController.text},
-      );
+      final response = await http.post(Uri.parse("http://127.0.0.1:5000/"),
+          body: {'key': _apiController.text});
       if (response.statusCode == 200) {
         log("Key sent successfully!");
       } else {
         log("Failed to send key. Status code: ${response.statusCode}");
       }
     } catch (e) {
-      log("Useless fuck! $e");
+      log("Fix this bro: $e");
     }
   }
 
@@ -72,6 +71,7 @@ class _ExamAIApp extends State<ExamAIApp> {
         title: Text(
           "ExamAI",
         ),
+        scrolledUnderElevation: scrolledUnderElevation,
       ),
       drawer: Drawer(
         child: SafeArea(
