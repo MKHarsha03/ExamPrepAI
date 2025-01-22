@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-void main() => runApp(const ExamAI());
+void main() async {
+  runApp(const ExamAI());
+}
 
 class ExamAI extends StatelessWidget {
   const ExamAI({super.key});
