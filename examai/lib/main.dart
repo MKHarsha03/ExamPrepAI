@@ -25,41 +25,31 @@ class ExamAIApp extends StatefulWidget {
 class _ExamAIApp extends State<ExamAIApp> {
   bool shadowColor = false;
   double? scrolledUnderElevation;
-  late TextEditingController _controller;
+  final TextEditingController _controller = TextEditingController();
   final TextEditingController _apiController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  String _statusMessage = '';
 
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  // void _openDrawer() {
-  //   _scaffoldKey.currentState!.openDrawer();
-  // }
-
-  // void _closeDrawer() {
-  //   Navigator.of(context).pop();
-  // }
-
-  void _sendAPI() async {
+  void _sendAPI(String? value) async {
+    setState(() {
+      _statusMessage = 'Sending...';
+    });
     try {
-      final response = await http.post(Uri.parse("http://192.168.1.4:8000/"),
-          body: {'key': _apiController.text});
+      final response = await http
+          .post(Uri.parse("http://192.168.1.4:8000/"), body: {'key': value});
       if (response.statusCode == 200) {
-        log("Key sent successfully!");
+        setState(() {
+          _statusMessage = "Key sent successfully!";
+        });
       } else {
-        log("Failed to send key. Status code: ${response.statusCode}");
+        setState(() {
+          _statusMessage = 'Failed to send key! Please retry after sometime';
+        });
       }
     } catch (e) {
-      log("Fix this bro: $e");
+      setState(() {
+        _statusMessage = 'Error! Cannot connect to the server';
+      });
     }
   }
 
@@ -82,13 +72,19 @@ class _ExamAIApp extends State<ExamAIApp> {
                 Divider(color: Colors.grey),
                 Padding(
                   padding: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 12.0),
-                  child: TextField(
-                    controller: _apiController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      labelText: "Groq API Key",
-                      border: OutlineInputBorder(),
-                    ),
+                  child: Column(
+                    children: <Widget>[
+                      TextField(
+                        controller: _apiController,
+                        onSubmitted: _sendAPI,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          labelText: "Groq API Key",
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      Text(_statusMessage),
+                    ],
                   ),
                 ),
                 Text("Add TextBook:"),
@@ -132,7 +128,7 @@ class _ExamAIApp extends State<ExamAIApp> {
               Expanded(
                 child: IconButton(
                   icon: Icon(Icons.send),
-                  onPressed: _sendAPI,
+                  onPressed: null,
                 ),
               ),
             ],
