@@ -174,14 +174,14 @@ class _ExamAIApp extends State<ExamAIApp> {
             children: <Widget>[
               Expanded(
                 flex: 4,
-                child: Expanded(
-                  child: TextField(
-                    onSubmitted: _sendQuery,
-                    controller: _controller,
-                    maxLines: null,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                    ),
+                child: TextField(
+                  onSubmitted: _sendQuery,
+                  controller: _controller,
+                  maxLines: null,
+                  minLines: null,
+                  expands: true,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
                   ),
                 ),
               ),
