@@ -58,6 +58,9 @@ class _ExamAIApp extends State<ExamAIApp> {
   }
 
   void _sendQuery(String? value) async {
+    setState(() {
+      _controller.clear();
+    });
     try {
       final response = await http.post(
         Uri.parse("http://192.168.1.4:8000/send_prompt"),
@@ -83,6 +86,16 @@ class _ExamAIApp extends State<ExamAIApp> {
           "ExamAI",
         ),
         scrolledUnderElevation: scrolledUnderElevation,
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+              child: Text('Hi! How could I help you today?'),
+            ),
+          ],
+        ),
       ),
       drawer: Drawer(
         child: SafeArea(
