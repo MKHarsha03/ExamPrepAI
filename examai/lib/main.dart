@@ -32,6 +32,7 @@ class _ExamAIApp extends State<ExamAIApp> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String _statusMessage = '';
 
+//Sends API Code to the backend
   void _sendAPI(String? value) async {
     setState(() {
       _statusMessage = 'Sending...';
@@ -57,6 +58,7 @@ class _ExamAIApp extends State<ExamAIApp> {
     }
   }
 
+//Sends query to the backend when user hits enter (Planning to remove soon)
   void _sendQuery(String? value) async {
     setState(() {
       _controller.clear();
@@ -77,6 +79,7 @@ class _ExamAIApp extends State<ExamAIApp> {
     }
   }
 
+//Sends query to the backend when user clicks on submit button
   void _sendPrompt() async {
     final query = _controller.text;
     setState(() {
@@ -171,11 +174,14 @@ class _ExamAIApp extends State<ExamAIApp> {
             children: <Widget>[
               Expanded(
                 flex: 4,
-                child: TextField(
-                  onSubmitted: _sendQuery,
-                  controller: _controller,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                child: Expanded(
+                  child: TextField(
+                    onSubmitted: _sendQuery,
+                    controller: _controller,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                    ),
                   ),
                 ),
               ),
