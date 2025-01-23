@@ -24,6 +24,7 @@ def receive_key():
 def recieve_prompt():
     try:
         query=request.form['query']
+        print(f"Query: {query}")
         completion = client.chat.completions.create(
         messages=[
             {'role':'system','content':'Just a friendly chatbot there to help'},

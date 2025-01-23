@@ -77,6 +77,27 @@ class _ExamAIApp extends State<ExamAIApp> {
     }
   }
 
+  void _sendPrompt() async {
+    final query = _controller.text;
+    setState(() {
+      _controller.clear();
+    });
+    try {
+      final response = await http.post(
+        Uri.parse("http://192.168.1.4:8000/send_prompt"),
+        body: {'query': query},
+      );
+
+      if (response.statusCode == 200) {
+        log("We won bro");
+      } else {
+        log("We lost bro");
+      }
+    } catch (e) {
+      log("We are done! $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -161,7 +182,7 @@ class _ExamAIApp extends State<ExamAIApp> {
               Expanded(
                 child: IconButton(
                   icon: Icon(Icons.send),
-                  onPressed: null,
+                  onPressed: _sendPrompt,
                 ),
               ),
             ],
