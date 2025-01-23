@@ -58,27 +58,6 @@ class _ExamAIApp extends State<ExamAIApp> {
     }
   }
 
-//Sends query to the backend when user hits enter (Planning to remove soon)
-  void _sendQuery(String? value) async {
-    setState(() {
-      _controller.clear();
-    });
-    try {
-      final response = await http.post(
-        Uri.parse("http://192.168.1.4:8000/send_prompt"),
-        body: {'query': value},
-      );
-
-      if (response.statusCode == 200) {
-        log("We won bro");
-      } else {
-        log("We lost bro");
-      }
-    } catch (e) {
-      log("We are done! $e");
-    }
-  }
-
 //Sends query to the backend when user clicks on submit button
   void _sendPrompt() async {
     final query = _controller.text;
@@ -175,7 +154,6 @@ class _ExamAIApp extends State<ExamAIApp> {
               Expanded(
                 flex: 4,
                 child: TextField(
-                  onSubmitted: _sendQuery,
                   controller: _controller,
                   maxLines: null,
                   minLines: null,
