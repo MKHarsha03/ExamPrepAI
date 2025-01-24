@@ -1,6 +1,6 @@
+import 'dart:convert';
 import 'dart:developer';
 //import 'dart:io';
-
 import 'package:flutter/material.dart';
 // import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
@@ -32,6 +32,8 @@ class _ExamAIApp extends State<ExamAIApp> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String _statusMessage = '';
 
+  final List<String> chats = [];
+
 //Sends API Code to the backend
   void _sendAPI(String? value) async {
     setState(() {
@@ -62,6 +64,7 @@ class _ExamAIApp extends State<ExamAIApp> {
   void _sendPrompt() async {
     final query = _controller.text;
     setState(() {
+      chats.add(query);
       _controller.clear();
     });
     try {
@@ -72,6 +75,10 @@ class _ExamAIApp extends State<ExamAIApp> {
 
       if (response.statusCode == 200) {
         log("We won bro");
+        final reply = jsonDecode(response.body);
+        setState(() {
+          chats.add(reply['bot_response']);
+        });
       } else {
         log("We lost bro");
       }
@@ -89,16 +96,6 @@ class _ExamAIApp extends State<ExamAIApp> {
           "ExamAI",
         ),
         scrolledUnderElevation: scrolledUnderElevation,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
-              child: Text('Hi! How could I help you today?'),
-            ),
-          ],
-        ),
       ),
       drawer: Drawer(
         child: SafeArea(
@@ -146,32 +143,41 @@ class _ExamAIApp extends State<ExamAIApp> {
               ]),
         ),
       ),
-      bottomSheet: BottomAppBar(
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: chats.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                    title: Text(
+                  chats[index],
+                ));
+              },
+            ),
+          ),
+          const Divider(height: 0.0),
+          Center(
+              child: Row(
+            children: [
               Expanded(
                 flex: 4,
                 child: TextField(
                   controller: _controller,
                   maxLines: null,
-                  minLines: null,
-                  expands: true,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                  keyboardType: TextInputType.multiline,
+                  decoration: const InputDecoration.collapsed(
+                    hintText: "Ask anything...",
                   ),
                 ),
               ),
-              Expanded(
-                child: IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: _sendPrompt,
-                ),
+              IconButton(
+                onPressed: _sendPrompt,
+                icon: const Icon(Icons.send),
               ),
             ],
-          ),
-        ),
+          )),
+        ],
       ),
     );
   }

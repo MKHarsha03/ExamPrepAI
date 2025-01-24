@@ -27,12 +27,12 @@ def recieve_prompt():
         print(f"Query: {query}")
         completion = client.chat.completions.create(
         messages=[
-            {'role':'system','content':'Just a friendly chatbot there to help'},
+            {'role':'system','content':'Give answers with proper heading, subheadings and references. You are like wikipedia, give complete information for what is asked in a proper format.'},
             {'role':'user','content':query},
         ],
         model="llama3-8b-8192",
         )
-        print(completion.choices[0].message.content)
+        #print(completion.choices[0].message.content)
         return jsonify({'bot_response':completion.choices[0].message.content}), 200
     
     except Exception as e:

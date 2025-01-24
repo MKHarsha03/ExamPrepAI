@@ -7,4 +7,12 @@ Complete the chat page and link the backend
 - This chatbot shouldn't be specialized in document querying, but be a general chatbot
 - Experiment with api call limits
 
+### Completed Phase-1: 24-01-2025
+
+### Deadline-2: 15-02-2025 to 29-02-2025
+Complete file upload path
+- Code backend and front-end to send documents to vector database
+- Write code to generate bold text for headings and subheadings, and give bullets to bullet points and all
+- Experiment with different types of preprocessing techniques to extract other information such as tables, images, etc from textbooks
+
 
