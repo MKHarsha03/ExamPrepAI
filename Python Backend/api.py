@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-api_key=os.getenv(".env")
+api_key=os.getenv(r"C:\Users\khmam\Desktop\ExamPrepAI\.env")
 app = Flask(__name__)
 client = Groq(api_key=api_key)
 

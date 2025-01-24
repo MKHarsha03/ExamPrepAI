@@ -156,7 +156,7 @@ class _ExamAIApp extends State<ExamAIApp> {
               },
             ),
           ),
-          const Divider(height: 0.0),
+          const Divider(height: 1.0),
           Center(
               child: Row(
             children: [
