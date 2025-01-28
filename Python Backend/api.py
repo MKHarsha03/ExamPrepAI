@@ -68,6 +68,7 @@ def receive_docs():
             docs = loader.load()
             all_splits = text_splitter.split_documents(docs)
             vector_store.add_documents(documents=all_splits)
+            os.remove(file_path)
             return jsonify({'message': 'The file has been processed successfully'}), 200
     except Exception as e:
         app.logger.error(f"Error processing file: {e}")
