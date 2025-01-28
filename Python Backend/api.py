@@ -1,12 +1,23 @@
 from flask import Flask, request, jsonify
 from groq import Groq
 from dotenv import load_dotenv
+from io import BytesIO
 import os
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_ollama import OllamaEmbeddings
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_core.vectorstores import InMemoryVectorStore
 
 load_dotenv()
 api_key=os.getenv(r"C:\Users\khmam\Desktop\ExamPrepAI\.env")
 app = Flask(__name__)
 client = Groq(api_key=api_key)
+embeddings=OllamaEmbeddings(model="llama3.2")
+text_splitter=RecursiveCharacterTextSplitter(
+    chunk_size=1000,chunk_overlap=200,add_start_index=True
+)
+vector_store=InMemoryVectorStore(embeddings)
+app.config['UPLOAD_FILE'] = r"C:\Users\khmam\Desktop\temp_storage"
 
 @app.route('/', methods=['POST'])
 def receive_key():
@@ -20,15 +31,18 @@ def receive_key():
         print(f"Fix this bro: {e}")
         return jsonify({"error": str(e)}), 400
 
-@app.route('/send_prompt',methods=['POST'])
+@app.route('/send_prompt',methods=['POST','GET'])
 def recieve_prompt():
     try:
         query=request.form['query']
         print(f"Query: {query}")
+        results=vector_store.similarity_search(query)
         completion = client.chat.completions.create(
         messages=[
-            {'role':'system','content':'Give answers with proper heading, subheadings and references. You are like wikipedia, give complete information for what is asked in a proper format.'},
-            {'role':'user','content':query},
+        {'role':'system','content':'''Answer the questions from the prompt and the context given by the user. If the answer is not
+         found, reply "Cannot provide answer", don't give any additional explanation about the question.Give the answer with proper headings,subheadings and bullet points if it is a long answer.
+         You have to help the user understand the answer to the question and format it for notes making.Do not give answers from outside provided context'''},
+         {'role':'user','content':f"Context:{results[0]},Question:{query}"}
         ],
         model="llama3-8b-8192",
         )
@@ -37,6 +51,26 @@ def recieve_prompt():
     
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+
+
+@app.route("/send_docs",methods=['POST','GET'])
+def recieve_docs():
+    if 'file' not in request.files:
+        return jsonify({'message':'No file part'}), 400
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'message':'No selected file'}), 400
+    try:
+        file_path = os.path.join(app.config['UPLOAD_FILE'],file.filename)
+        loader = PyPDFLoader(file_path)
+        docs = loader.load()
+        all_splits=text_splitter.split_documents(docs)
+        vector_store.add_documents(documents=all_splits)
+        os.remove(file_path)
+        return jsonify({'message':'File uploaded successfully'}), 200
+    
+    except Exception as e:
+        return jsonify({'message':f'Error processing file: {str(e)}'}), 500
 
 
 if __name__ == '__main__':

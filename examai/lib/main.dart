@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 //import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-// import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 //import 'dart:convert';
 
@@ -41,7 +42,7 @@ class _ExamAIApp extends State<ExamAIApp> {
     });
     try {
       final response = await http.post(
-        Uri.parse("http://192.168.1.4:8000/"),
+        Uri.parse("http://192.168.142.121:8000/"),
         body: {'key': value},
       );
       if (response.statusCode == 200) {
@@ -69,7 +70,7 @@ class _ExamAIApp extends State<ExamAIApp> {
     });
     try {
       final response = await http.post(
-        Uri.parse("http://192.168.1.4:8000/send_prompt"),
+        Uri.parse("http://192.168.142.121:8000/send_prompt"),
         body: {'query': query},
       );
 
@@ -84,6 +85,27 @@ class _ExamAIApp extends State<ExamAIApp> {
       }
     } catch (e) {
       log("We are done! $e");
+    }
+  }
+
+  void sendDocs() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result != null) {
+      File file = File(result.files.single.path!);
+      final uri = Uri.parse('http://192.168.142.121:8000/send_docs');
+      final request = http.MultipartRequest('POST', uri)
+        ..files.add(await http.MultipartFile.fromPath('file', file.path));
+
+      final response = await request.send();
+
+      if (response.statusCode == 200) {
+        log("File successfully sent");
+      } else {
+        log("File not sent!");
+      }
+      log("File was selected!");
+    } else {
+      log("User didn't pick");
     }
   }
 
@@ -126,7 +148,7 @@ class _ExamAIApp extends State<ExamAIApp> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 12.0),
                   child: ElevatedButton(
-                    onPressed: null,
+                    onPressed: sendDocs,
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
