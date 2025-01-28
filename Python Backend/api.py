@@ -42,7 +42,7 @@ def recieve_prompt():
         {'role':'system','content':'''Answer the questions from the prompt and the context given by the user. If the answer is not
          found, reply "Cannot provide answer", don't give any additional explanation about the question.Give the answer with proper headings,subheadings and bullet points if it is a long answer.
          You have to help the user understand the answer to the question and format it for notes making.Do not give answers from outside provided context'''},
-         {'role':'user','content':f"Context:{results[0]},Question:{query}"}
+         {'role':'user','content':f"Context:{results[:5]},Question:{query}"}
         ],
         model="llama3-8b-8192",
         )
