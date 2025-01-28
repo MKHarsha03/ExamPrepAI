@@ -31,7 +31,7 @@ def receive_key():
         print(f"Fix this bro: {e}")
         return jsonify({"error": str(e)}), 400
 
-@app.route('/send_prompt',methods=['POST','GET'])
+@app.route('/send_prompt',methods=['POST'])
 def recieve_prompt():
     try:
         query=request.form['query']
@@ -51,26 +51,27 @@ def recieve_prompt():
     
     except Exception as e:
         return jsonify({"error": str(e)}), 400
-
-
-@app.route("/send_docs",methods=['POST','GET'])
-def recieve_docs():
-    if 'file' not in request.files:
-        return jsonify({'message':'No file part'}), 400
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({'message':'No selected file'}), 400
-    try:
-        file_path = os.path.join(app.config['UPLOAD_FILE'],file.filename)
-        loader = PyPDFLoader(file_path)
-        docs = loader.load()
-        all_splits=text_splitter.split_documents(docs)
-        vector_store.add_documents(documents=all_splits)
-        os.remove(file_path)
-        return jsonify({'message':'File uploaded successfully'}), 200
     
+
+@app.route("/send_docs", methods=['POST'])
+def receive_docs():
+    try:
+        if 'file' not in request.files:
+            return jsonify({'message': 'No file part'}), 400
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({'message': 'No selected file'}), 400
+        if file:
+            file_path = os.path.join(app.config['UPLOAD_FILE'], file.filename)
+            file.save(file_path)  # Ensure the file is saved before attempting to load
+            loader = PyPDFLoader(file_path)
+            docs = loader.load()
+            all_splits = text_splitter.split_documents(docs)
+            vector_store.add_documents(documents=all_splits)
+            return jsonify({'message': 'The file has been processed successfully'}), 200
     except Exception as e:
-        return jsonify({'message':f'Error processing file: {str(e)}'}), 500
+        app.logger.error(f"Error processing file: {e}")
+        return jsonify({'message': 'Internal Server Error'}), 500
 
 
 if __name__ == '__main__':

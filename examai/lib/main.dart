@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-//import 'dart:convert';
+import 'dart:convert';
 
 void main() async {
   runApp(const ExamAI());
@@ -42,7 +42,7 @@ class _ExamAIApp extends State<ExamAIApp> {
     });
     try {
       final response = await http.post(
-        Uri.parse("http://192.168.142.121:8000/"),
+        Uri.parse("http://192.168.1.11:8000/"),
         body: {'key': value},
       );
       if (response.statusCode == 200) {
@@ -70,7 +70,7 @@ class _ExamAIApp extends State<ExamAIApp> {
     });
     try {
       final response = await http.post(
-        Uri.parse("http://192.168.142.121:8000/send_prompt"),
+        Uri.parse("http://192.168.1.11:8000/send_prompt"),
         body: {'query': query},
       );
 
@@ -92,14 +92,16 @@ class _ExamAIApp extends State<ExamAIApp> {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result != null) {
       File file = File(result.files.single.path!);
-      final uri = Uri.parse('http://192.168.142.121:8000/send_docs');
+      final uri = Uri.parse('http://192.168.1.11:8000/send_docs');
       final request = http.MultipartRequest('POST', uri)
         ..files.add(await http.MultipartFile.fromPath('file', file.path));
 
       final response = await request.send();
 
       if (response.statusCode == 200) {
-        log("File successfully sent");
+        final responseData = await http.Response.fromStream(response);
+        final reply = jsonDecode(responseData.body);
+        log(reply.toString());
       } else {
         log("File not sent!");
       }
