@@ -40,7 +40,7 @@ def recieve_prompt():
         completion = client.chat.completions.create(
         messages=[
         {'role':'system','content':"Answer the question making it easy for the user to make notes. Layout the content with headings, subheadings, bullet points etc."},
-         {'role':'user','content':f"Context:{results[0]},Question:{query}"}
+         {'role':'user','content':f"Context:{results[:5]},Question:{query}"}
         ],
         model="llama3-8b-8192",
         )
@@ -64,9 +64,11 @@ def receive_docs():
             file.save(file_path)  # Ensure the file is saved before attempting to load
             loader = PyPDFLoader(file_path)
             docs = loader.load()
+            print("The pdf is loaded under docs variable")
             all_splits = text_splitter.split_documents(docs)
+            print("Text has been splitted accordingly")
             vector_store.add_documents(documents=all_splits)
-            os.remove(file_path)
+            print("Stored in vector store")
             return jsonify({'message': 'The file has been processed successfully'}), 200
     except Exception as e:
         app.logger.error(f"Error processing file: {e}")

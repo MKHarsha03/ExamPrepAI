@@ -32,6 +32,7 @@ class _ExamAIApp extends State<ExamAIApp> {
   final TextEditingController _apiController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String _statusMessage = '';
+  String _fileMessage = '';
 
   final List<String> chats = [];
 
@@ -89,6 +90,9 @@ class _ExamAIApp extends State<ExamAIApp> {
   }
 
   void sendDocs() async {
+    setState(() {
+      _fileMessage = "Sending PDF";
+    });
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result != null) {
       File file = File(result.files.single.path!);
@@ -101,7 +105,9 @@ class _ExamAIApp extends State<ExamAIApp> {
       if (response.statusCode == 200) {
         final responseData = await http.Response.fromStream(response);
         final reply = jsonDecode(responseData.body);
-        log(reply.toString());
+        setState(() {
+          _fileMessage = reply['message'].toString();
+        });
       } else {
         log("File not sent!");
       }
@@ -164,6 +170,7 @@ class _ExamAIApp extends State<ExamAIApp> {
                         ]),
                   ),
                 ),
+                Text(_fileMessage),
               ]),
         ),
       ),
