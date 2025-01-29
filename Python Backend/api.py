@@ -39,9 +39,7 @@ def recieve_prompt():
         results=vector_store.similarity_search(query,k=5)
         completion = client.chat.completions.create(
         messages=[
-        {'role':'system','content':'''Answer the questions asked by the user. Give answers with a layout which would be useful to
-        create notes. Give the closest answers possible from the given context. Don't hallucinate or give answers which aren't from the context. If no answer can be provided
-        or context is gibberish say "Fuck You".'''},
+        {'role':'system','content':"Answer the question making it easy for the user to make notes. Layout the content with headings, subheadings, bullet points etc."},
          {'role':'user','content':f"Context:{results[0]},Question:{query}"}
         ],
         model="llama3-8b-8192",
