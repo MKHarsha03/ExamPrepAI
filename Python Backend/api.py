@@ -36,13 +36,13 @@ def recieve_prompt():
     try:
         query=request.form['query']
         print(f"Query: {query}")
-        results=vector_store.similarity_search(query)
+        results=vector_store.similarity_search(query,k=5)
         completion = client.chat.completions.create(
         messages=[
-        {'role':'system','content':'''Answer the questions from the prompt and the context given by the user. If the answer is not
-         found, reply "Cannot provide answer", don't give any additional explanation about the question.Give the answer with proper headings,subheadings and bullet points if it is a long answer.
-         You have to help the user understand the answer to the question and format it for notes making.Do not give answers from outside provided context'''},
-         {'role':'user','content':f"Context:{results[:5]},Question:{query}"}
+        {'role':'system','content':'''Answer the questions asked by the user. Give answers with a layout which would be useful to
+        create notes. Give the closest answers possible from the given context. Don't hallucinate or give answers which aren't from the context. If no answer can be provided
+        or context is gibberish say "Fuck You".'''},
+         {'role':'user','content':f"Context:{results[0]},Question:{query}"}
         ],
         model="llama3-8b-8192",
         )
