@@ -3,16 +3,18 @@ from groq import Groq
 from dotenv import load_dotenv
 from io import BytesIO
 import os
+from flask_cors import CORS
 from langchain_community.document_loaders import PyPDFLoader
-from langchain_ollama import OllamaEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.vectorstores import InMemoryVectorStore
 
 load_dotenv()
 api_key=os.getenv(r"C:\Users\khmam\Desktop\ExamPrepAI\.env")
 app = Flask(__name__)
+CORS(app)
 client = Groq(api_key=api_key)
-embeddings=OllamaEmbeddings(model="llama3.2")
+embeddings = HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2')
 text_splitter=RecursiveCharacterTextSplitter(
     chunk_size=1000,chunk_overlap=200,add_start_index=True
 )
