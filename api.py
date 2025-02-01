@@ -7,6 +7,7 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.vectorstores import InMemoryVectorStore
+import torch
 
 
 load_dotenv()
@@ -14,7 +15,8 @@ api_key=os.getenv(".env")
 app = Flask(__name__)
 CORS(app)
 client = Groq(api_key=api_key)
-embeddings = HuggingFaceEmbeddings(model_name='sentence-transformers/all-mpnet-base-v2')
+#device = torch.device("cuda")
+embeddings = HuggingFaceEmbeddings(model_name='sentence-transformers/all-mpnet-base-v2',model_kwargs={'device':'cpu'}) #Change to cuda if you have Nvidia gpu
 
 text_splitter=RecursiveCharacterTextSplitter(
     chunk_size=1000,chunk_overlap=200,add_start_index=True
