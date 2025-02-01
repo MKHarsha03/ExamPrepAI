@@ -29,38 +29,10 @@ class _ExamAIApp extends State<ExamAIApp> {
   bool shadowColor = false;
   double? scrolledUnderElevation;
   final TextEditingController _controller = TextEditingController();
-  final TextEditingController _apiController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  String _statusMessage = '';
   String _fileMessage = '';
 
   final List<String> chats = [];
-
-//Sends API Code to the backend
-  void _sendAPI(String? value) async {
-    setState(() {
-      _statusMessage = 'Sending...';
-    });
-    try {
-      final response = await http.post(
-        Uri.parse("http://192.168.1.11:8000/"),
-        body: {'key': value},
-      );
-      if (response.statusCode == 200) {
-        setState(() {
-          _statusMessage = "Key sent successfully!";
-        });
-      } else {
-        setState(() {
-          _statusMessage = 'Failed to send key! Please retry after sometime';
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _statusMessage = 'Error! Cannot connect to the server';
-      });
-    }
-  }
 
 //Sends query to the backend when user clicks on submit button
   void _sendPrompt() async {
@@ -132,25 +104,6 @@ class _ExamAIApp extends State<ExamAIApp> {
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text("Groq API Key"),
-                Divider(color: Colors.grey),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 12.0),
-                  child: Column(
-                    children: <Widget>[
-                      TextField(
-                        controller: _apiController,
-                        onSubmitted: _sendAPI,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          labelText: "Groq API Key",
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      Text(_statusMessage),
-                    ],
-                  ),
-                ),
                 Text("Add TextBook:"),
                 Divider(color: Colors.grey),
                 Padding(
@@ -167,6 +120,26 @@ class _ExamAIApp extends State<ExamAIApp> {
                         children: <Widget>[
                           Text("Upload"),
                           Icon(Icons.upload),
+                        ]),
+                  ),
+                ),
+                Text(_fileMessage),
+                Text("Add PPT(PDF Format) or Images:"),
+                Divider(color: Colors.grey),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 12.0),
+                  child: ElevatedButton(
+                    onPressed: null,
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text("Use OCR"),
+                          Icon(Icons.visibility),
                         ]),
                   ),
                 ),

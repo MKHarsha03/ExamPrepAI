@@ -9,12 +9,16 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.vectorstores import InMemoryVectorStore
 
+
 load_dotenv()
 api_key=os.getenv(r"C:\Users\khmam\Desktop\ExamPrepAI\.env")
 app = Flask(__name__)
 CORS(app)
 client = Groq(api_key=api_key)
-embeddings = HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2')
+try:
+    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+except Exception as e:
+    print(e)
 text_splitter=RecursiveCharacterTextSplitter(
     chunk_size=1000,chunk_overlap=200,add_start_index=True
 )
