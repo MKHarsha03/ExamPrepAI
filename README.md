@@ -22,6 +22,7 @@ notes and cheatsheets for preparing for tests.
 - Create a .env file and add groq api key, change the model in api.py according to your needs
 - Run by using command `python api.py`
 - For flutter application once the emulator (or physical device) is connected hit the run and debug button.
+### Note: Run `huggingface-cli login` in your terminal and paste your access token before running the python code
 
 ## Future Development
 - Have to format the text displayed by the llm properly
