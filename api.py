@@ -10,11 +10,11 @@ from langchain_core.vectorstores import InMemoryVectorStore
 
 
 load_dotenv()
-api_key=os.getenv(r"C:\Users\khmam\Desktop\ExamPrepAI\.env")
+api_key=os.getenv(".env")
 app = Flask(__name__)
 CORS(app)
 client = Groq(api_key=api_key)
-embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
+embeddings = HuggingFaceEmbeddings(model_name='sentence-transformers/all-mpnet-base-v2')
 
 text_splitter=RecursiveCharacterTextSplitter(
     chunk_size=1000,chunk_overlap=200,add_start_index=True
