@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 from groq import Groq
 from dotenv import load_dotenv
-from io import BytesIO
 import os
 from flask_cors import CORS
 from langchain_community.document_loaders import PyPDFLoader
@@ -15,10 +14,8 @@ api_key=os.getenv(r"C:\Users\khmam\Desktop\ExamPrepAI\.env")
 app = Flask(__name__)
 CORS(app)
 client = Groq(api_key=api_key)
-try:
-    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-except Exception as e:
-    print(e)
+embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+
 text_splitter=RecursiveCharacterTextSplitter(
     chunk_size=1000,chunk_overlap=200,add_start_index=True
 )
