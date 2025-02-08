@@ -16,7 +16,7 @@ notes and cheatsheets for preparing for tests.
     - langchain, langchain_text_splitters (pip install langchain)
     - langchain-hugging face (pip install langchain[hub])
     - langchain-core (pip install langchain-core)
-    - Install pytorch for cuda (only if you have gpu on system)
+    - langchain-chroma (for Vector DB)
 
 - Choose the device on the bottom right corner (Where you could see Windows(windows-x64) or something else based on OS)
 - Create a .env file and add groq api key, change the model in api.py according to your needs
