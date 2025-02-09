@@ -43,7 +43,7 @@ class _ExamAIApp extends State<ExamAIApp> {
     });
     try {
       final response = await http.post(
-        Uri.parse("SERVER_ADDRESS/send_prompt"),
+        Uri.parse("http://192.168.1.3:8000/send_prompt"),
         body: {'query': query},
       );
 
@@ -68,7 +68,7 @@ class _ExamAIApp extends State<ExamAIApp> {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result != null) {
       File file = File(result.files.single.path!);
-      final uri = Uri.parse('SERVER_ADDRESS/send_docs');
+      final uri = Uri.parse('http://192.168.1.3:8000/send_docs');
       final request = http.MultipartRequest('POST', uri)
         ..files.add(await http.MultipartFile.fromPath('file', file.path));
 
@@ -87,6 +87,31 @@ class _ExamAIApp extends State<ExamAIApp> {
     } else {
       log("User didn't pick");
     }
+  }
+
+  List<TextSpan> _formatText(String text) {
+    final List<TextSpan> spans = [];
+    final RegExp regex = RegExp(r'\*\*(.*?)\*\*');
+    int currentIndex = 0;
+
+    for (final match in regex.allMatches(text)) {
+      if (match.start > currentIndex) {
+        spans.add(TextSpan(text: text.substring(currentIndex, match.start)));
+      }
+
+      spans.add(TextSpan(
+        text: match.group(1),
+        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+      ));
+
+      currentIndex = match.end;
+    }
+
+    if (currentIndex < text.length) {
+      spans.add(TextSpan(text: text.substring(currentIndex)));
+    }
+
+    return spans;
   }
 
   @override
@@ -154,9 +179,11 @@ class _ExamAIApp extends State<ExamAIApp> {
               itemCount: chats.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                    title: Text(
-                  chats[index],
-                ));
+                  title: RichText(
+                      text: TextSpan(
+                          style: DefaultTextStyle.of(context).style,
+                          children: _formatText(chats[index]))),
+                );
               },
             ),
           ),
