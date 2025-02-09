@@ -1,6 +1,5 @@
 # ExamPrepAI
-ExamAI is your exam buddy, which can parse through your text book and help you from summarizing a lesson to preparing
-notes and cheatsheets for preparing for tests.
+ExamAI is a mobile application where you can ask a chatbot to summarize lessons and ask question related to the documents you upload. We have used LLama-3.2-1B for document summarization.
 
 ## SetUp
 - View the flutter documentation to set up environment for flutter (https://docs.flutter.dev/get-started/install)

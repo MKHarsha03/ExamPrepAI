@@ -42,10 +42,12 @@ def receive_prompt():
         results = db.similarity_search(query, k=5)
         completion = client.chat.completions.create(
             messages=[
-                {'role': 'system', 'content': "Answer the question making it easy for the user to make notes. Layout the content with headings, subheadings, bullet points etc. DON'T DEVIATE FROM PROVIDED CONTEXT"},
+                {'role': 'system', 'content': """Answer the question making it easy for the user to make notes. Layout the content with headings, subheadings, bullet points etc.
+                 If the user has doubts clarify with the data from the context and bit of your knowledge as well. The layout is mandatory in either case. If the answer to the question is not in context ask
+                 the user to rephrase."""},
                 {'role': 'user', 'content': f"Context: {results[:5]}, Question: {query}"}
             ],
-            model="llama3-8b-8192",
+            model="llama-3.2-1b-preview",
         )
         return jsonify({'bot_response': completion.choices[0].message.content}), 200
 
