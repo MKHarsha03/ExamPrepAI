@@ -24,7 +24,6 @@ notes and cheatsheets for preparing for tests.
 - For flutter application once the emulator (or physical device) is connected hit the run and debug button.
 
 ## Future Development
-- Have to format the text displayed by the llm properly
 - Use multimodal for image generation
 
 # Happy Coding
