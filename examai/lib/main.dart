@@ -43,7 +43,7 @@ class _ExamAIApp extends State<ExamAIApp> {
     });
     try {
       final response = await http.post(
-        Uri.parse("SERVER_URL/send_prompt"),
+        Uri.parse("http://SERVER_URL/send_prompt"),
         body: {'query': query},
       );
 
@@ -68,7 +68,7 @@ class _ExamAIApp extends State<ExamAIApp> {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result != null) {
       File file = File(result.files.single.path!);
-      final uri = Uri.parse('SERVER_URL/send_docs');
+      final uri = Uri.parse("http://SERVER_URL/send_docs");
       final request = http.MultipartRequest('POST', uri)
         ..files.add(await http.MultipartFile.fromPath('file', file.path));
 

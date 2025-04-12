@@ -1,0 +1,2 @@
+C:/Users/khmam/Desktop/ExamAI/examai/android/app/.cxx/Debug/5i3c592v/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/khmam/Desktop/ExamAI/examai/android/app/.cxx/Debug/5i3c592v/armeabi-v7a/CMakeFiles/rebuild_cache.dir
