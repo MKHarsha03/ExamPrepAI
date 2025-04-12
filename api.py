@@ -40,12 +40,14 @@ def receive_prompt():
         query = request.form['query']
         print(f"Query: {query}")
         results = db.similarity_search(query, k=5)
+        context = " ".join([result.page_content for result in results])
+        print(results)
         completion = client.chat.completions.create(
             messages=[
                 {'role': 'system', 'content': """Answer the question making it easy for the user to make notes. Layout the content with headings, subheadings, bullet points etc.
                  If the user has doubts clarify with the data from the context and bit of your knowledge as well. The layout is mandatory in either case. If the answer to the question is not in context ask
-                 the user to rephrase."""},
-                {'role': 'user', 'content': f"Context: {results[:5]}, Question: {query}"}
+                 the user to rephrase. Don't rewrite the users query."""},
+                {'role': 'user', 'content': f"Context: {context}, Question: {query}"}
             ],
             model="llama-3.2-1b-preview",
         )
